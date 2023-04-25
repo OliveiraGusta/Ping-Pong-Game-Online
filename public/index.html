@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raquetes com Multiplayer Online</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <canvas id="myCanvas">
+
+    </canvas>
+
+    <script>
+        const canvas = document.getElementById('myCanvas')
+        const c = canvas.getContext('2d')
+
+        canvas.width = innerWidth
+        canvas.height = innerHeight
+
+
+        class Diviser {
+            constructor({ position }) {
+                this.position = position
+                this.velocity = {
+                    x: 0,
+                    y: 0
+                }
+                this.width = 5
+                this.height = canvas.height
+            }
+            draw() {
+                c.fillStyle = 'white',
+                    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+            }
+            update() {
+                this.draw()
+            }
+
+        }
+
+
+        class Score {
+            baseScore() {
+                this.namePlayer1 = 'Gustavo',
+                    this.namePlayer2 = 'Murilo',
+                    this.scorePlayer1 = 0,
+                    this.scorePlayer2 = 0
+            }
+
+            increasePlayer1() {
+                this.scorePlayer1++
+
+            }
+            increasePlayer2() {
+                this.scorePlayer2++
+
+            }
+
+            draw() {
+
+                c.fillStyle = 'white'
+                c.font = '30px SansSerif';
+                c.textBaseline = 'top';
+                c.textAlign = 'center';
+                c.fillText(`${this.namePlayer1} : ${this.scorePlayer1}`, canvas.width / 4, 50);
+                c.fillText(`${this.namePlayer2} : ${this.scorePlayer2}`, canvas.width / 2 + canvas.width / 4, 50);
+            }
+            update() {
+                this.baseScore()
+                this.draw()
+
+            }
+
+        }
+
+
+        class Paddle {
+            constructor({ position }) {
+                this.position = position
+                this.velocity = {
+                    x: 0,
+                    y: 0
+                }
+                this.width = 10
+                this.height = 100
+            }
+            draw() {
+                c.fillStyle = 'white',
+                    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+            }
+            update() {
+                this.draw()
+
+                if (this.position.y + this.velocity.y > 0 && this.position.y + this.velocity.y + this.height < canvas.height)
+                    this.position.y += this.velocity.y
+
+            }
+        }
+
+        class Ball {
+            constructor({ position }) {
+                this.position = position
+
+                var speed = 3
+                const direction = {
+                    x: Math.random() - 0.5 >= 0 ? -speed : speed,
+                    y: Math.random() - 0.5 >= 0 ? -speed : speed,
+                }
+                this.velocity = {
+                    x: direction.x,
+                    y: direction.y,
+                }
+
+                this.width = 10,
+                    this.height = 10
+            }
+            resetBall() {
+                this.position.x = canvas.width / 2,
+                    this.position.y = canvas.height / 2
+            }
+
+            draw() {
+                c.fillStyle = 'white',
+                    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+
+            }
+            update() {
+                this.draw()
+                const rightSide = this.position.x + this.width + this.velocity.x
+                const leftSide = this.position.x + this.velocity.x
+                const bottomSide = this.position.y + this.height
+                const topSide = this.position.y
+
+
+                //Colisao Raquete 1 
+                if (
+                    leftSide <= paddle1.position.x + paddle1.width &&
+                    bottomSide >= paddle1.position.y &&
+                    topSide <= paddle1.position.y + paddle1.height
+                ) {
+
+                    this.velocity.x = -this.velocity.x
+                }
+
+                //Colisao Raquete 2
+                if (
+                    rightSide >= paddle2.position.x &&
+                    bottomSide >= paddle2.position.y &&
+                    topSide <= paddle2.position.y + paddle2.height
+                ) {
+                    this.velocity.x = -this.velocity.x
+                }
+
+                // Reverter direcao do eixo y 
+                if (
+                    this.position.y + this.height + this.velocity.y >= canvas.height
+                    || this.position.y + this.velocity.y <= 0
+                ) {
+                    this.velocity.y = -this.velocity.y
+                }
+
+                this.position.x += this.velocity.x
+                this.position.y += this.velocity.y
+
+                if (this.position.x > canvas.width + 2) {
+                    //Ponto Player 1
+
+                    this.resetBall()
+
+                    console.log('Pontuação Player1: ' + score.scorePlayer1)
+
+
+                }
+
+                if (this.position.x < -2) {
+                    //Ponto Player 2
+
+                    this.resetBall()
+                    score.increasePlayer2()
+                    console.log('Pontuação Player2: ' + score.scorePlayer2)
+
+                }
+
+            }
+        }
+
+
+        const score = new Score()
+
+        const diviser = new Diviser({
+            position: {
+                x: canvas.width / 2,
+                y: 0
+            },
+        })
+
+        const paddle1 = new Paddle({
+            position: {
+                x: 10,
+                y: 100
+            },
+        })
+
+        const paddle2 = new Paddle({
+            position: {
+                x: canvas.width - 10 * 2,
+                y: 100
+            },
+        })
+
+        const ball = new Ball({
+            position: {
+                x: canvas.width / 2,
+                y: canvas.height / 2
+            }
+        })
+
+
+        function animate() {
+            requestAnimationFrame(animate)
+            c.fillStyle = 'black'
+            c.fillRect(0, 0, canvas.width, canvas.height)
+
+            score.update()
+            diviser.update()
+
+            paddle1.update()
+            paddle2.update()
+            ball.update()
+
+        }
+
+        animate()
+
+        addEventListener('keydown', (event) => {
+            const speed = 7
+
+            switch (event.key) {
+
+                //Jogador 1
+                case 'w':
+                    //Para Cima
+                    paddle1.velocity.y = -speed
+                    break
+
+                case 's':
+                    //Para Baixo
+                    paddle1.velocity.y = speed
+                    break
+
+                //Jogador 2
+                case 'ArrowUp':
+                    //Para Cima
+                    paddle2.velocity.y = -speed
+
+                    break
+
+                case 'ArrowDown':
+                    //Para Baixo
+                    paddle2.velocity.y = speed
+
+                    break
+
+            }
+
+        })
+
+    </script>
+
+</body>
+
+</html>
