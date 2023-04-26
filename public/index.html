@@ -34,7 +34,7 @@
             }
             draw() {
                 c.fillStyle = 'white',
-                    c.fillRect(this.position.x, this.position.y, this.width, this.height)
+                c.fillRect(this.position.x, 100  - this.position.y, this.width, this.height)
             }
             update() {
                 this.draw()
@@ -50,11 +50,23 @@
 
             increasePlayer1() {
                 this.scorePlayer1++
+                this.scorePlayer1 = this.scorePlayer1 /  this.scorePlayer1
+               
+                
             }
             increasePlayer2() {
                 this.scorePlayer2++
+                this.scorePlayer2 = this.scorePlayer2 /  this.scorePlayer2
+            
             }
 
+            alertPoint(){
+                c.fillStyle = 'white'
+                c.font = '50px SansSerif';
+                c.textBaseline = 'top';
+                c.textAlign = 'center';
+                c.fillText(`Ponto!!`, canvas.width / 2 , 30);
+            }
             draw() {
                 c.fillStyle = 'white'
                 c.font = '30px SansSerif';
@@ -109,11 +121,17 @@
                 }
 
                 this.width = 10,
-                    this.height = 10
+                this.height = 10
             }
             resetBall() {
-                this.position.x = canvas.width / 2,
-                    this.position.y = canvas.height / 2
+                score.alertPoint()
+                setTimeout(() => {
+                    this.position.x = canvas.width / 2 ,
+                    this.position.y = canvas.height / 2   
+                    }, 1000);
+               
+                    
+
             }
 
             draw() {
@@ -158,24 +176,23 @@
 
                 this.position.x += this.velocity.x
                 this.position.y += this.velocity.y
-
-                if (this.position.x > canvas.width + 2) {
+                
+                if (this.position.x > canvas.width) {
                     //Ponto Player 1
+                    console.log("Ponto Player 1")
 
                     this.resetBall()
                     score.increasePlayer1()
-                    console.log('Pontuação Player1: ' + score.scorePlayer1)
-
-
+                    
                 }
 
-                if (this.position.x < -2) {
+                if (this.position.x <= 0) {
                     //Ponto Player 2
+                    console.log("Ponto Player 2")
 
                     this.resetBall()
                     score.increasePlayer2()
-                    console.log('Pontuação Player2: ' + score.scorePlayer2)
-
+                   
                 }
 
             }
