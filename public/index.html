@@ -42,26 +42,20 @@
 
         }
 
-
         class Score {
-            baseScore() {
-                this.namePlayer1 = 'Gustavo',
-                    this.namePlayer2 = 'Murilo',
-                    this.scorePlayer1 = 0,
-                    this.scorePlayer2 = 0
-            }
+            namePlayer1 = 'Gustavo'
+            namePlayer2 = 'Murilo'
+            scorePlayer1 = 0
+            scorePlayer2 = 0
 
             increasePlayer1() {
                 this.scorePlayer1++
-
             }
             increasePlayer2() {
                 this.scorePlayer2++
-
             }
 
             draw() {
-
                 c.fillStyle = 'white'
                 c.font = '30px SansSerif';
                 c.textBaseline = 'top';
@@ -70,7 +64,6 @@
                 c.fillText(`${this.namePlayer2} : ${this.scorePlayer2}`, canvas.width / 2 + canvas.width / 4, 50);
             }
             update() {
-                this.baseScore()
                 this.draw()
 
             }
@@ -170,7 +163,7 @@
                     //Ponto Player 1
 
                     this.resetBall()
-
+                    score.increasePlayer1()
                     console.log('Pontuação Player1: ' + score.scorePlayer1)
 
 
