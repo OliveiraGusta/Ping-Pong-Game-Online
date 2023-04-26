@@ -21,7 +21,7 @@
 
         canvas.width = innerWidth
         canvas.height = innerHeight
-
+        themeChange = "d"
         
         class Diviser {
             constructor({ position }) {
@@ -34,7 +34,12 @@
                 this.height = canvas.height
             }
             draw() {
-                c.fillStyle = 'white',
+                if(themeChange == "l"){
+                    c.fillStyle = 'white'
+            }else{
+                c.fillStyle = 'white'
+            }
+               
                     c.fillRect(this.position.x, 100 - this.position.y, this.width, this.height)
             }
             update() {
@@ -56,7 +61,7 @@
             
 
             alertNewGame() {
-                
+                prompt("Escolha o tema - Digite 'd' para Dark, Digite 'l' para Light")
                 this.namePlayer1 = prompt("Digite o nome do Jogador 1", "Player1")
                 this.namePlayer2 = prompt("Digite o nome do Jogador 2", "Player2")
                 this.gameWinPoints = Number(window.prompt("Jogo acaba em quantos pontos?", "3"))
@@ -90,7 +95,12 @@
             }
 
             alertPoint() {
+                if(themeChange == "l"){
+                    c.fillStyle = 'black'
+            }else{
                 c.fillStyle = 'white'
+            }
+               
                 c.font = '50px SansSerif';
                 c.textBaseline = 'top';
                 c.textAlign = 'center';
@@ -98,7 +108,11 @@
             }
             draw() {
 
+                if(themeChange == "l"){
+                    c.fillStyle = 'black'
+            }else{
                 c.fillStyle = 'white'
+            }
                 c.font = '30px SansSerif';
                 c.textBaseline = 'top';
                 c.textAlign = 'center';
@@ -143,7 +157,11 @@
                 this.height = 100
             }
             draw() {
-                c.fillStyle = 'white',
+                if(themeChange == "l"){
+                    c.fillStyle = 'black'
+            }else{
+                c.fillStyle = 'white'
+            }
                     c.fillRect(this.position.x, this.position.y, this.width, this.height)
             }
             update() {
@@ -184,7 +202,11 @@
             }
 
             draw() {
-                c.fillStyle = 'white',
+                if(themeChange == "l"){
+                    c.fillStyle = 'black'
+            }else{
+                c.fillStyle = 'white'
+            }
                     c.fillRect(this.position.x, this.position.y, this.width, this.height)
 
             }
@@ -276,7 +298,12 @@
 
         function animate() {
             requestAnimationFrame(animate)
-            c.fillStyle = 'black'
+            if(themeChange == "l"){
+                c.fillStyle = 'white'
+            }else{
+                c.fillStyle = 'black'
+            }
+           
             c.fillRect(0, 0, canvas.width, canvas.height)
 
             gameRules.update()
