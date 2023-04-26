@@ -15,13 +15,14 @@
     </canvas>
 
     <script>
+
         const canvas = document.getElementById('myCanvas')
         const c = canvas.getContext('2d')
 
         canvas.width = innerWidth
         canvas.height = innerHeight
 
-
+        
         class Diviser {
             constructor({ position }) {
                 this.position = position
@@ -34,7 +35,7 @@
             }
             draw() {
                 c.fillStyle = 'white',
-                c.fillRect(this.position.x, 100  - this.position.y, this.width, this.height)
+                    c.fillRect(this.position.x, 100 - this.position.y, this.width, this.height)
             }
             update() {
                 this.draw()
@@ -42,32 +43,61 @@
 
         }
 
-        class Score {
-            namePlayer1 = 'Gustavo'
-            namePlayer2 = 'Murilo'
+        class GameRules {
+
+            namePlayer1 = ""
+            namePlayer2 = ""
+            gameWinPoints = 0
+
+            countWinPlayer1 = 0
+            countWinPlayer2 = 0
             scorePlayer1 = 0
             scorePlayer2 = 0
+            
+
+            alertNewGame() {
+                
+                this.namePlayer1 = prompt("Digite o nome do Jogador 1", "Player1")
+                this.namePlayer2 = prompt("Digite o nome do Jogador 2", "Player2")
+                this.gameWinPoints = Number(window.prompt("Jogo acaba em quantos pontos?", "3"))
+                this.scorePlayer1 = 0
+                this.scorePlayer2 = 0
+                window.alert("Aperte enter para iniciar")
+
+            }
+            gameWins(nameWinner, nameLoser, numberWinnerWins, numberLoserWins) {
+                var games =  numberWinnerWins + numberLoserWins
+                if(games == 1){
+                    games = games + " partida jogada, "
+                }else{
+                    games = games + " partidas jogadas, "
+                }
+
+
+                ball.resetBall()
+                window.alert(nameWinner + " ganhou essa, " + nameLoser + " é horrivel!")
+
+                window.alert("Relatorio: " + games  + nameWinner + " esta com " + numberWinnerWins + " Vitorias e " + nameLoser + " esta com "+ numberLoserWins + " Vitorias ")
+
+            }
 
             increasePlayer1() {
                 this.scorePlayer1++
-                this.scorePlayer1 = this.scorePlayer1 /  this.scorePlayer1
-               
-                
-            }
-            increasePlayer2() {
-                this.scorePlayer2++
-                this.scorePlayer2 = this.scorePlayer2 /  this.scorePlayer2
-            
             }
 
-            alertPoint(){
+            increasePlayer2() {
+                this.scorePlayer2++
+            }
+
+            alertPoint() {
                 c.fillStyle = 'white'
                 c.font = '50px SansSerif';
                 c.textBaseline = 'top';
                 c.textAlign = 'center';
-                c.fillText(`Ponto!!`, canvas.width / 2 , 30);
+                c.fillText(`Ponto!!`, canvas.width / 2, 30);
             }
             draw() {
+
                 c.fillStyle = 'white'
                 c.font = '30px SansSerif';
                 c.textBaseline = 'top';
@@ -76,6 +106,25 @@
                 c.fillText(`${this.namePlayer2} : ${this.scorePlayer2}`, canvas.width / 2 + canvas.width / 4, 50);
             }
             update() {
+
+                if(this.namePlayer1 == "" ||  this.namePlayer2 == "" ){
+                    this.alertNewGame()
+                }
+
+                if (this.scorePlayer1 >= this.gameWinPoints ) {
+                    this.countWinPlayer1++
+
+                    this.gameWins(this.namePlayer1, this.namePlayer2, this.countWinPlayer1, this.countWinPlayer2)
+                    
+                    this.alertNewGame()
+                }
+
+                if (this.scorePlayer2 >= this.gameWinPoints ) {
+                    this.countWinPlayer2++
+                    this.gameWins(this.namePlayer2, this.namePlayer1, this.countWinPlayer2, this.countWinPlayer1)
+                  
+                    this.alertNewGame()
+                }
                 this.draw()
 
             }
@@ -121,16 +170,16 @@
                 }
 
                 this.width = 10,
-                this.height = 10
+                    this.height = 10
             }
             resetBall() {
-                score.alertPoint()
-                setTimeout(() => {
-                    this.position.x = canvas.width / 2 ,
-                    this.position.y = canvas.height / 2   
-                    }, 1000);
-               
-                    
+                gameRules.alertPoint(),
+                    //setTimeout(() => {
+                    this.position.x = canvas.width / 2,
+                    this.position.y = canvas.height / 2
+                // }, 1000);
+
+
 
             }
 
@@ -176,30 +225,25 @@
 
                 this.position.x += this.velocity.x
                 this.position.y += this.velocity.y
-                
+
                 if (this.position.x > canvas.width) {
                     //Ponto Player 1
-                    console.log("Ponto Player 1")
-
                     this.resetBall()
-                    score.increasePlayer1()
-                    
+                    gameRules.increasePlayer1()
+
                 }
 
                 if (this.position.x <= 0) {
                     //Ponto Player 2
-                    console.log("Ponto Player 2")
-
                     this.resetBall()
-                    score.increasePlayer2()
-                   
+                    gameRules.increasePlayer2()
+
                 }
 
             }
         }
 
-
-        const score = new Score()
+        const gameRules = new GameRules()
 
         const diviser = new Diviser({
             position: {
@@ -235,7 +279,7 @@
             c.fillStyle = 'black'
             c.fillRect(0, 0, canvas.width, canvas.height)
 
-            score.update()
+            gameRules.update()
             diviser.update()
 
             paddle1.update()
