@@ -23,30 +23,7 @@
         canvas.height = innerHeight
         themeChange = "d"
         
-        class Diviser {
-            constructor({ position }) {
-                this.position = position
-                this.velocity = {
-                    x: 0,
-                    y: 0
-                }
-                this.width = 5
-                this.height = canvas.height
-            }
-            draw() {
-                if(themeChange == "l"){
-                    c.fillStyle = 'white'
-            }else{
-                c.fillStyle = 'white'
-            }
-               
-                    c.fillRect(this.position.x, 100 - this.position.y, this.width, this.height)
-            }
-            update() {
-                this.draw()
-            }
-
-        }
+       
 
         class GameRules {
 
@@ -61,7 +38,7 @@
             
 
             alertNewGame() {
-                prompt("Escolha o tema - Digite 'd' para Dark, Digite 'l' para Light")
+                themeChange = prompt("Escolha o tema - Digite 'd' para Dark, Digite 'l' para Light")
                 this.namePlayer1 = prompt("Digite o nome do Jogador 1", "Player1")
                 this.namePlayer2 = prompt("Digite o nome do Jogador 2", "Player2")
                 this.gameWinPoints = Number(window.prompt("Jogo acaba em quantos pontos?", "3"))
@@ -145,6 +122,30 @@
 
         }
 
+        class Diviser {
+            constructor({ position }) {
+                this.position = position
+                this.velocity = {
+                    x: 0,
+                    y: 0
+                }
+                this.width = 5
+                this.height = canvas.height
+            }
+            draw() {
+                if(themeChange == "l"){
+                    c.fillStyle = 'black'
+            }else{
+                c.fillStyle = 'white'
+            }
+               
+                    c.fillRect(this.position.x, 100 - this.position.y, this.width, this.height)
+            }
+            update() {
+                this.draw()
+            }
+
+        }
 
         class Paddle {
             constructor({ position }) {
@@ -177,10 +178,10 @@
             constructor({ position }) {
                 this.position = position
 
-                var speed = 3
+                this.speed = 3
                 const direction = {
-                    x: Math.random() - 0.5 >= 0 ? -speed : speed,
-                    y: Math.random() - 0.5 >= 0 ? -speed : speed,
+                    x: Math.random() - 0.5 >= 0 ? - this.speed :  this.speed,
+                    y: Math.random() - 0.5 >= 0 ? - this.speed :  this.speed,
                 }
                 this.velocity = {
                     x: direction.x,
@@ -224,7 +225,8 @@
                     bottomSide >= paddle1.position.y &&
                     topSide <= paddle1.position.y + paddle1.height
                 ) {
-
+                    this.speed++
+                    console.log("Agora a velocidade da bolinha é: " + this.speed)
                     this.velocity.x = -this.velocity.x
                 }
 
@@ -234,6 +236,9 @@
                     bottomSide >= paddle2.position.y &&
                     topSide <= paddle2.position.y + paddle2.height
                 ) {
+                    this.speed++
+                    console.log("Agora a velocidade da bolinha é: " + this.speed)
+
                     this.velocity.x = -this.velocity.x
                 }
 
@@ -242,6 +247,7 @@
                     this.position.y + this.height + this.velocity.y >= canvas.height
                     || this.position.y + this.velocity.y <= 0
                 ) {
+                    
                     this.velocity.y = -this.velocity.y
                 }
 
@@ -319,7 +325,7 @@
 
         addEventListener('keydown', (event) => {
             const speed = 7
-
+            console.log(event.key)
             switch (event.key) {
 
                 //Jogador 1
@@ -327,12 +333,22 @@
                     //Para Cima
                     paddle1.velocity.y = -speed
                     break
+                //Jogador 1
 
-                case 's':
-                    //Para Baixo
+                case 'W':
+                    //Para Cima com CAPSLOCK
+                    paddle1.velocity.y = -speed
+                break
+
+                case 's' :
+                //Para Baixo
+                paddle1.velocity.y = speed
+                break
+
+                case 'S':
+                    //Para Baixo com CAPSLOCK
                     paddle1.velocity.y = speed
                     break
-
                 //Jogador 2
                 case 'ArrowUp':
                     //Para Cima
